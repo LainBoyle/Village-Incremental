@@ -1,0 +1,1 @@
+you have to have a fun time while playing this game. thats the first rule and the second rule is you can't make money off of this game by selling the game itself cause thats not fair i made it. but if u wanna show ur friends this game then thats cool, just dont charge for it

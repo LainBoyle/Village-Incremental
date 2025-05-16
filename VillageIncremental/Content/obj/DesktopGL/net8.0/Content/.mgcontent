@@ -7,8 +7,12 @@
     <File>C:/Users/elain/.vscode/Hearts/VillageIncremental/VillageIncremental/VillageIncremental/Content/background.png</File>
     <File>C:/Users/elain/.vscode/Hearts/VillageIncremental/VillageIncremental/VillageIncremental/Content/buildmenubox.png</File>
     <File>C:/Users/elain/.vscode/Hearts/VillageIncremental/VillageIncremental/VillageIncremental/Content/closehammer.png</File>
+    <File>C:/Users/elain/.vscode/Hearts/VillageIncremental/VillageIncremental/VillageIncremental/Content/coinicon.png</File>
+    <File>C:/Users/elain/.vscode/Hearts/VillageIncremental/VillageIncremental/VillageIncremental/Content/gear.png</File>
     <File>C:/Users/elain/.vscode/Hearts/VillageIncremental/VillageIncremental/VillageIncremental/Content/hammer.png</File>
     <File>C:/Users/elain/.vscode/Hearts/VillageIncremental/VillageIncremental/VillageIncremental/Content/hut.png</File>
+    <File>C:/Users/elain/.vscode/Hearts/VillageIncremental/VillageIncremental/VillageIncremental/Content/ironhut.png</File>
+    <File>C:/Users/elain/.vscode/Hearts/VillageIncremental/VillageIncremental/VillageIncremental/Content/ironicon.png</File>
     <File>C:/Users/elain/.vscode/Hearts/VillageIncremental/VillageIncremental/VillageIncremental/Content/ironshop.png</File>
     <File>C:/Users/elain/.vscode/Hearts/VillageIncremental/VillageIncremental/VillageIncremental/Content/mine.png</File>
     <File>C:/Users/elain/.vscode/Hearts/VillageIncremental/VillageIncremental/VillageIncremental/Content/score.spritefont</File>
@@ -16,9 +20,17 @@
     <File>C:/Users/elain/.vscode/Hearts/VillageIncremental/VillageIncremental/VillageIncremental/Content/shop.png</File>
     <File>C:/Users/elain/.vscode/Hearts/VillageIncremental/VillageIncremental/VillageIncremental/Content/shopchoose.png</File>
     <File>C:/Users/elain/.vscode/Hearts/VillageIncremental/VillageIncremental/VillageIncremental/Content/tree.png</File>
+    <File>C:/Users/elain/.vscode/Hearts/VillageIncremental/VillageIncremental/VillageIncremental/Content/woodhut.png</File>
+    <File>C:/Users/elain/.vscode/Hearts/VillageIncremental/VillageIncremental/VillageIncremental/Content/woodicon.png</File>
     <File>C:/Users/elain/.vscode/Hearts/VillageIncremental/VillageIncremental/VillageIncremental/Content/woodshop.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>C:/Users/elain/.vscode/Hearts/VillageIncremental/VillageIncremental/VillageIncremental/Content/tree.png</SourceFile>
-  <SourceTime>2025-05-14T23:56:50.0731157-07:00</SourceTime>
-  <DestFile>C:/Users/elain/.vscode/Hearts/VillageIncremental/VillageIncremental/VillageIncremental/Content/bin/DesktopGL/Content/tree.xnb</DestFile>
-  <DestTime>2025-05-14T23:57:39.7249347-07:00</DestTime>
+  <SourceFile>C:/Users/elain/.vscode/Hearts/VillageIncremental/VillageIncremental/VillageIncremental/Content/coinicon.png</SourceFile>
+  <SourceTime>2025-05-14T23:52:25.6120147-07:00</SourceTime>
+  <DestFile>C:/Users/elain/.vscode/Hearts/VillageIncremental/VillageIncremental/VillageIncremental/Content/bin/DesktopGL/Content/coinicon.xnb</DestFile>
+  <DestTime>2025-05-14T23:53:06.8242017-07:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2024-08-16T10:05:56-07:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

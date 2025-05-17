@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework;
 namespace Buildings{
   class Building
   {
-    Texture2D texture; 
+    public Texture2D texture; 
     public (int, int) coords;
     public int width;
     public int height;
@@ -38,14 +38,12 @@ namespace Buildings{
 
   class Hut : Building
   {
-    Texture2D texture;
+
     Texture2D woodHutTexture;
     Texture2D ironHutTexture;
     Texture2D hutChooseTexture;
 
-    public (int, int) coords;
-    public int width;
-    public int height;
+
     public int rate;
     public int hutState; // 0 is init, 1 is choosing, 2 is wood, 3 is iron
     public int oldState;
@@ -92,6 +90,7 @@ namespace Buildings{
 
     public override void rclick(Point mouseCoords)
     {
+      Console.WriteLine("Hut state: " + this.hutState);
       if (this.hutState != 1)
       {
         this.oldState = this.hutState;
@@ -104,6 +103,7 @@ namespace Buildings{
     {
       Rectangle leftRect = new Rectangle(this.coords.Item1, this.coords.Item2, this.width / 2, this.height);
       Rectangle rightRect = new Rectangle(this.coords.Item1 + this.width / 2, this.coords.Item2, this.width / 2, this.height);
+
 
       if (leftRect.Contains(mouseCoords))
       { //chose wood
@@ -131,13 +131,9 @@ namespace Buildings{
   class Shop : Building
   {
     Texture2D shopChooseTexture;
-    Texture2D texture;
-    private new (int, int) coords;
 
     private int oldState;
 
-    public new int width;
-    public new int height;
     public int shopState; // 0 is init, 1 is choosing, 2 is wood, 3 is iron
     Texture2D woodShopTexture;
     Texture2D ironShopTexture;
@@ -155,11 +151,6 @@ namespace Buildings{
       this.woodShopTexture = woodShopTexture;
       this.ironShopTexture = ironShopTexture;
       this.rate = 1;
-    }
-
-    public new (int, int) getCoords()
-    {
-      return this.coords;
     }
 
     public override Texture2D getTexture()

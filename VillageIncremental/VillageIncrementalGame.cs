@@ -4,8 +4,11 @@ using System.Runtime.CompilerServices;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
 using Buildings;
 using System.Xml.XPath;
+using System.Security.Cryptography;
 
 namespace VillageIncremental;
 
@@ -15,6 +18,12 @@ public class VillageIncrementalGame : Game
     private SpriteBatch _spriteBatch;
     private UIhandler uiHandler;
 
+    private Song[] musicTracks;
+    private int currentTrack = 0;
+    private TimeSpan currentTrackPosition = TimeSpan.Zero;
+
+
+
     // Texture2D instance variables
     private Texture2D background;
     private Texture2D scoreboard;
@@ -22,6 +31,10 @@ public class VillageIncrementalGame : Game
     private Texture2D closehammer;
     private Texture2D mine;
     private Texture2D tree;
+
+    private Texture2D woodicon;
+    private Texture2D ironicon;
+    private Texture2D coinicon;
     private Texture2D shop;
     private Texture2D shopchoose;
     private Texture2D woodshop;
@@ -31,6 +44,10 @@ public class VillageIncrementalGame : Game
     private Texture2D ironHut;
     private Texture2D hutchoose;
     private Texture2D buildmenubox;
+
+    SoundEffect chopSound;
+    SoundEffect mineSound;
+
 
     private List<Texture2D> mySprites;
     private List<Building> myBuildings;
@@ -84,6 +101,9 @@ public class VillageIncrementalGame : Game
         buildMenuSprites = new List<Texture2D>();
         buildMenuSpriteCoords = new List<(int, int)>();
 
+        chopSound = Content.Load<SoundEffect>("chopsound");
+        mineSound = Content.Load<SoundEffect>("minesound");
+
         background = Content.Load<Texture2D>("background");
         hammer = Content.Load<Texture2D>("hammer");
         mySprites.Add(hammer);
@@ -103,6 +123,10 @@ public class VillageIncrementalGame : Game
         woodshop = Content.Load<Texture2D>("woodshop");
         ironshop = Content.Load<Texture2D>("ironshop");
         buildmenubox = Content.Load<Texture2D>("buildmenubox");
+
+        woodicon = Content.Load<Texture2D>("woodicon");
+        ironicon = Content.Load<Texture2D>("ironicon");
+        coinicon = Content.Load<Texture2D>("coinicon");
 
         buildMenuSpriteCoords.Add((50, 930));
         buildMenuSprites.Add(closehammer);
@@ -124,12 +148,40 @@ public class VillageIncrementalGame : Game
 
         scoreboard = Content.Load<Texture2D>("scoreboard");
         font = Content.Load<SpriteFont>("score");
+
+        musicTracks = new Song[3];
+        musicTracks[0] = Content.Load<Song>("villageincrementalsong0");
+        musicTracks[1] = Content.Load<Song>("villageincrementalsong1");
+        musicTracks[2] = Content.Load<Song>("villageincrementalsong2");
+        MediaPlayer.IsRepeating = true;
+        MediaPlayer.Play(musicTracks[0]);
+        currentTrack = 0;
+
+
     }
+    
+
+    
+    private void switchMusic(int newTrack)
+    {
+        if (newTrack == currentTrack) return;
+        currentTrackPosition = MediaPlayer.PlayPosition;
+        MediaPlayer.Stop();
+        MediaPlayer.Play(musicTracks[newTrack], currentTrackPosition);
+        currentTrack = newTrack;
+    }
+
+
+
 
     protected override void Update(GameTime gameTime)
     {
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
+
+
+
+
 
         MouseState newState = Mouse.GetState();
 
@@ -196,6 +248,7 @@ public class VillageIncrementalGame : Game
                     if (building == 0)
                     {
                         ironStock++;
+                        mineSound.Play();
                     }
                     counting = false;
                 }
@@ -205,6 +258,7 @@ public class VillageIncrementalGame : Game
                     if (building == 0)
                     {
                         woodStock++;
+                        chopSound.Play();
                     }
                     counting = false;
                 }
@@ -214,6 +268,7 @@ public class VillageIncrementalGame : Game
                     if (building == 0)
                     {
                         woodStock++;
+                        chopSound.Play();
                     }
                     counting = false;
                 }
@@ -324,7 +379,7 @@ public class VillageIncrementalGame : Game
             woodStock += woodRate;
             coins += woodSellRate;
         }
-        else if (woodStock + woodRate > 0)
+        else if (woodStock + woodRate >= 0)
         {
             coins += woodSellRate;
             woodStock += woodRate;
@@ -334,7 +389,7 @@ public class VillageIncrementalGame : Game
             ironStock += ironRate;
             coins += ironSellRate;
         }
-        else if (ironStock + ironRate > 0)
+        else if (ironStock + ironRate >= 0)
         {
             coins += ironSellRate;
             ironStock += ironRate;
@@ -385,6 +440,11 @@ public class VillageIncrementalGame : Game
             // shop
             if (checkBuildReqs())
             {
+                if (currentTrack == 0) {
+                    switchMusic(1);
+                }
+
+
                 woodStock -= 10;
                 ironStock -= 10;
                 int xCoord = newState.X - (shop.Width / 2);
@@ -401,6 +461,10 @@ public class VillageIncrementalGame : Game
             // hut
             if (checkBuildReqs())
             {
+                if (currentTrack == 1) {
+                    switchMusic(2);
+                }
+
                 woodStock -= 15;
                 ironStock -= 5;
                 coins -= 25;
@@ -433,6 +497,9 @@ public class VillageIncrementalGame : Game
         return false;
     }
 
+
+
+
     protected override void Draw(GameTime gameTime)
     {
         GraphicsDevice.Clear(Color.CornflowerBlue);
@@ -448,6 +515,11 @@ public class VillageIncrementalGame : Game
         }
 
         _spriteBatch.Draw(scoreboard, new Vector2(50, 50), Color.White);
+        _spriteBatch.Draw(woodicon, new Vector2(110, 75), Color.White);
+        _spriteBatch.Draw(ironicon, new Vector2(380, 100), Color.White);
+        _spriteBatch.Draw(coinicon, new Vector2(650, 80), Color.White);
+
+
         _spriteBatch.DrawString(font, woodStock.ToString(), new Vector2(180, 100), Color.Black);
         _spriteBatch.DrawString(font, ironStock.ToString(), new Vector2(465, 100), Color.Black);
         _spriteBatch.DrawString(font, coins.ToString(), new Vector2(725, 100), Color.Black);
@@ -462,18 +534,18 @@ public class VillageIncrementalGame : Game
         {
             drawBuildMenu();
         }
-        
+
         MouseState newState = Mouse.GetState();
 
 
         if (building == 1)
         {
-            _spriteBatch.Draw(shop, new Vector2(newState.X - shop.Width/2, newState.Y - shop.Height/2), Color.White);
+            _spriteBatch.Draw(shop, new Vector2(newState.X - shop.Width / 2, newState.Y - shop.Height / 2), Color.White);
 
         }
         else if (building == 2)
         {
-            _spriteBatch.Draw(hut, new Vector2(newState.X - hut.Width/2, newState.Y - hut.Height/2), Color.White);
+            _spriteBatch.Draw(hut, new Vector2(newState.X - hut.Width / 2, newState.Y - hut.Height / 2), Color.White);
         }
 
 

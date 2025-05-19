@@ -12,6 +12,7 @@
     <File>C:/Users/elain/.vscode/Hearts/VillageIncremental/VillageIncremental/VillageIncremental/Content/gear.png</File>
     <File>C:/Users/elain/.vscode/Hearts/VillageIncremental/VillageIncremental/VillageIncremental/Content/hammer.png</File>
     <File>C:/Users/elain/.vscode/Hearts/VillageIncremental/VillageIncremental/VillageIncremental/Content/hut.png</File>
+    <File>C:/Users/elain/.vscode/Hearts/VillageIncremental/VillageIncremental/VillageIncremental/Content/hutchoose.png</File>
     <File>C:/Users/elain/.vscode/Hearts/VillageIncremental/VillageIncremental/VillageIncremental/Content/ironhut.png</File>
     <File>C:/Users/elain/.vscode/Hearts/VillageIncremental/VillageIncremental/VillageIncremental/Content/ironicon.png</File>
     <File>C:/Users/elain/.vscode/Hearts/VillageIncremental/VillageIncremental/VillageIncremental/Content/ironshop.png</File>
@@ -30,6 +31,7 @@
     <File>C:/Users/elain/.vscode/Hearts/VillageIncremental/VillageIncremental/VillageIncremental/Content/woodshop.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

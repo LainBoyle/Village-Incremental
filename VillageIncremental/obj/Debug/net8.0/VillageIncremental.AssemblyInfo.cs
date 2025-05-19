@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("VillageIncremental")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b23c937a472c265549319af6e09de3d724ab16e7")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+17cac34b7d0bb0ade6e661dfc0b2f86ed85e0b02")]
 [assembly: System.Reflection.AssemblyProductAttribute("VillageIncremental")]
 [assembly: System.Reflection.AssemblyTitleAttribute("VillageIncremental")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

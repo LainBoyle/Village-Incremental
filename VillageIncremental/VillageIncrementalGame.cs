@@ -118,7 +118,7 @@ public class VillageIncrementalGame : Game
         ironHut = Content.Load<Texture2D>("ironHut");
         shop = Content.Load<Texture2D>("shop");
         shopchoose = Content.Load<Texture2D>("shopchoose");
-        hutchoose = shopchoose;
+        hutchoose = Content.Load<Texture2D>("hutchoose");
 
         woodshop = Content.Load<Texture2D>("woodshop");
         ironshop = Content.Load<Texture2D>("ironshop");
@@ -164,8 +164,9 @@ public class VillageIncrementalGame : Game
     
     private void switchMusic(int newTrack)
     {
-        TimeSpan ts1 = new TimeSpan(256);
         if (newTrack == currentTrack) return;
+        TimeSpan ts1 = new TimeSpan(11280000);
+
         currentTrackPosition = MediaPlayer.PlayPosition;
         MediaPlayer.Play(musicTracks[newTrack], currentTrackPosition.Subtract(ts1));
         currentTrack = newTrack;

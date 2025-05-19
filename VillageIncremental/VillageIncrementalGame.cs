@@ -164,10 +164,10 @@ public class VillageIncrementalGame : Game
     
     private void switchMusic(int newTrack)
     {
+        TimeSpan ts1 = new TimeSpan(256);
         if (newTrack == currentTrack) return;
         currentTrackPosition = MediaPlayer.PlayPosition;
-        MediaPlayer.Stop();
-        MediaPlayer.Play(musicTracks[newTrack], currentTrackPosition);
+        MediaPlayer.Play(musicTracks[newTrack], currentTrackPosition.Subtract(ts1));
         currentTrack = newTrack;
     }
 

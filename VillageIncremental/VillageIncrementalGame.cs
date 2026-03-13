@@ -43,18 +43,20 @@ public class VillageIncrementalGame : Game
     private Texture2D woodHut;
     private Texture2D ironHut;
     private Texture2D hutchoose;
-    private Texture2D buildmenubox;
 
     SoundEffect chopSound;
     SoundEffect mineSound;
+    SoundEffect errorSound;
+    SoundEffect buildSound;
+    SoundEffect ironSound;
+    SoundEffect kachingSound;
+    SoundEffect woodSound;
 
 
-    private List<Texture2D> mySprites;
+    private List<(Texture2D sprite, (int x, int y) coords)> clickables;
+
+
     private List<Building> myBuildings;
-    private List<Building> myShops;
-    private List<(int, int)> spriteCoords;
-    private List<Texture2D> buildMenuSprites;
-    private List<(int, int)> buildMenuSpriteCoords;
 
     private double clockCount = 1;
 
@@ -70,9 +72,9 @@ public class VillageIncrementalGame : Game
 
     // UI variables
     private MouseState oldState;
-    private bool buildMenuOpen;
     private int building;
-    private bool menuOpen;
+    private bool buildingQueued;
+    //private bool menuOpen;
 
     public VillageIncrementalGame()
     {
@@ -86,33 +88,31 @@ public class VillageIncrementalGame : Game
     protected override void Initialize()
     {
         base.Initialize();
-        buildMenuOpen = false;
         building = 0;
+        buildingQueued = false;
         myBuildings = new List<Building>();
-        myShops = new List<Building>();
-        menuOpen = false;
+        //menuOpen = false;
     }
 
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-        mySprites = new List<Texture2D>();
-        buildMenuSprites = new List<Texture2D>();
-        buildMenuSpriteCoords = new List<(int, int)>();
+
 
         chopSound = Content.Load<SoundEffect>("chopsound");
         mineSound = Content.Load<SoundEffect>("minesound");
+        errorSound = Content.Load<SoundEffect>("errorsound");
+        buildSound = Content.Load<SoundEffect>("buildsound");
+        ironSound = Content.Load<SoundEffect>("ironsound");
+        kachingSound = Content.Load<SoundEffect>("kaching");
+        woodSound = Content.Load<SoundEffect>("woodsound");
 
         background = Content.Load<Texture2D>("background");
         hammer = Content.Load<Texture2D>("hammer");
-        mySprites.Add(hammer);
         closehammer = Content.Load<Texture2D>("closehammer");
         mine = Content.Load<Texture2D>("mine");
-        mySprites.Add(mine);
         tree = Content.Load<Texture2D>("tree");
-        mySprites.Add(tree);
-        mySprites.Add(tree);
         hut = Content.Load<Texture2D>("hut");
         woodHut = Content.Load<Texture2D>("woodHut");
         ironHut = Content.Load<Texture2D>("ironHut");
@@ -122,29 +122,24 @@ public class VillageIncrementalGame : Game
 
         woodshop = Content.Load<Texture2D>("woodshop");
         ironshop = Content.Load<Texture2D>("ironshop");
-        buildmenubox = Content.Load<Texture2D>("buildmenubox");
 
         woodicon = Content.Load<Texture2D>("woodicon");
         ironicon = Content.Load<Texture2D>("ironicon");
         coinicon = Content.Load<Texture2D>("coinicon");
 
-        buildMenuSpriteCoords.Add((50, 930));
-        buildMenuSprites.Add(closehammer);
-        buildMenuSpriteCoords.Add((200, 770));
-        buildMenuSprites.Add(buildmenubox);
-        buildMenuSpriteCoords.Add((530, 770));
-        buildMenuSprites.Add(buildmenubox);
 
         uiHandler = new UIhandler(_graphics, _spriteBatch);
         uiHandler.LoadUIContent(Content);
 
-        spriteCoords = new List<(int, int)>
+
+        clickables = new List<(Texture2D, (int, int))>
         {
-            (50, 930), // hammer
-            (1300, 150), // mine
-            (1500, 750), // tree
-            (1400, 670) // tree
+            (hammer, (50, 930)), // hammer
+            (mine, (1300, 150)), // mine
+            (tree, (1500, 750)), // tree
+            (tree, (1400, 670)) // tree
         };
+
 
         scoreboard = Content.Load<Texture2D>("scoreboard");
         font = Content.Load<SpriteFont>("score");
@@ -165,10 +160,13 @@ public class VillageIncrementalGame : Game
     private void switchMusic(int newTrack)
     {
         if (newTrack == currentTrack) return;
-        TimeSpan ts1 = new TimeSpan(11280000);
+        TimeSpan ts1 = new TimeSpan(11300000);
 
         currentTrackPosition = MediaPlayer.PlayPosition;
-        MediaPlayer.Play(musicTracks[newTrack], currentTrackPosition.Subtract(ts1));
+        TimeSpan startPosition = currentTrackPosition > ts1 
+            ? currentTrackPosition.Subtract(ts1) 
+            : musicTracks[currentTrack].Duration.Subtract(ts1);
+        MediaPlayer.Play(musicTracks[newTrack], startPosition);
         currentTrack = newTrack;
     }
 
@@ -211,37 +209,39 @@ public class VillageIncrementalGame : Game
     {
         // if lr 0, left click, otherwise right click
         Point mousePoint = new Point(curState.X, curState.Y);
-        bool counting = true;
 
-        if (menuOpen)
+        int xmod = 0;
+        int ymod = 0;
+
+        Console.WriteLine("Building: " + building);
+        if (building == 1)
         {
-            uiHandler.HandleClick(mousePoint, lr);
-            return;
+            xmod = shop.Width * 2;
+            ymod = shop.Height * 2;
+        }
+        else if (building == 2)
+        {
+            xmod = hut.Width * 2;
+            ymod = hut.Height * 2;
         }
 
-        for (int i = 0; i < mySprites.Count; i++)
+
+
+
+        for (int i = 0; i < clickables.Count; i++)
         {
-            int xStart = spriteCoords[i].Item1;
-            int yStart = spriteCoords[i].Item2;
-            int width = mySprites[i].Width;
-            int height = mySprites[i].Height;
+            int xStart = clickables[i].coords.x - xmod;
+            int yStart = clickables[i].coords.y - ymod;
+            int width = clickables[i].sprite.Width + xmod;
+            int height = clickables[i].sprite.Height + ymod;
 
             Rectangle sprRect = new Rectangle(xStart, yStart, width, height);
-            if (counting && sprRect.Contains(mousePoint))
+            if (sprRect.Contains(mousePoint))
             {
                 if (i == 0)
                 {
-                    // Clicked Hammer
-                    counting = false;
-                    if (buildMenuOpen == false)
-                    {
-                        openBuildMenu();
-                    }
-                    else
-                    {
-                        building = 0;
-                        closeBuildMenu();
-                    }
+                    toggleBuildMenu();
+                    // Clicked hammer
                 }
                 else if (i == 1)
                 {
@@ -251,7 +251,6 @@ public class VillageIncrementalGame : Game
                         ironStock++;
                         mineSound.Play();
                     }
-                    counting = false;
                 }
                 else if (i == 2)
                 {
@@ -261,7 +260,6 @@ public class VillageIncrementalGame : Game
                         woodStock++;
                         chopSound.Play();
                     }
-                    counting = false;
                 }
                 else if (i == 3)
                 {
@@ -271,15 +269,23 @@ public class VillageIncrementalGame : Game
                         woodStock++;
                         chopSound.Play();
                     }
-                    counting = false;
                 }
+                return;
             }
         }
 
         foreach (Building build in myBuildings)
         {
-            Rectangle sprRect = new Rectangle(build.getCoords().Item1, build.getCoords().Item2, build.width, build.height);
-            if (counting && sprRect.Contains(mousePoint))
+            int checkingx = build.getCoords().Item1 - xmod;
+            int checkingy = build.getCoords().Item2 - ymod;
+            int checkingWidth = build.width + xmod;
+            int checkingHeight = build.height + ymod;
+
+
+
+
+            Rectangle sprRect = new Rectangle(checkingx, checkingy, checkingWidth, checkingHeight);
+            if (sprRect.Contains(mousePoint))
             {
                 if (build is Shop shop)
                 {
@@ -288,10 +294,22 @@ public class VillageIncrementalGame : Game
                         (int first, int second) result = shop.lclick(mousePoint);
                         if (result != (0, 0))
                         {
+
+                            if (result.second == 3)
+                            {
+                                ironSound.Play();
+                            }
+                            else if (result.second == 2)
+                            {
+                                woodSound.Play();
+                            }
+
                             woodRate -= ((result.second == 2 ? 1 : 0) - (result.first == 2 ? 1 : 0));
                             woodSellRate += ((result.second == 2 ? 1 : 0) - (result.first == 2 ? 1 : 0)) * shop.rate;
                             ironRate -= ((result.second == 3 ? 1 : 0) - (result.first == 3 ? 1 : 0));
                             ironSellRate += ((result.second == 3 ? 1 : 0) - (result.first == 3 ? 1 : 0)) * shop.rate;
+                            
+                            kachingSound.Play();
                         }
                     }
                     else if (lr == 1)
@@ -306,6 +324,15 @@ public class VillageIncrementalGame : Game
                         (int first, int second) result = hut.lclick(mousePoint);
                         if (result != (0, 0))
                         {
+                            if (result.second == 3)
+                            {
+                                ironSound.Play();
+                            }
+                            else if (result.second == 2)
+                            {
+                                woodSound.Play();
+                            }
+
                             woodRate += (result.second == 2 ? 1 : 0) - (result.first == 2 ? 1 : 0) * hut.rate;
                             ironRate += (result.second == 3 ? 1 : 0) - (result.first == 3 ? 1 : 0) * hut.rate;
                         }
@@ -314,63 +341,31 @@ public class VillageIncrementalGame : Game
                     {
                         hut.rclick(mousePoint);
                     }
+
                 }
+                return;
+
             }
         }
-
-        if (buildMenuOpen)
+    
+                
+        if (uiHandler.buildMenuOpen)
         {
-            for (int j = 0; j < buildMenuSprites.Count; j++)
+            if (buildingQueued)
             {
-                int xStart = buildMenuSpriteCoords[j].Item1;
-                int yStart = buildMenuSpriteCoords[j].Item2;
-                int width = buildMenuSprites[j].Width;
-                int height = buildMenuSprites[j].Height;
-
-                if (building == 1)
-                {
-                    xStart -= shop.Width / 2;
-                    yStart -= shop.Height / 2;
-                    width += shop.Width / 2;
-                    height += shop.Height / 2;
-                }
-                else if (building == 2)
-                {
-                    xStart -= hut.Width / 2;
-                    yStart -= hut.Height / 2;
-                    width += hut.Width / 2;
-                    height += hut.Height / 2;
-                }
-
-                Rectangle sprRect = new Rectangle(xStart, yStart, width, height);
-
-                if (counting && sprRect.Contains(mousePoint))
-                {
-                    if (j == 0)
-                    {
-                        // clicked on hammer - nothing for now
-                    }
-                    else if (j == 1)
-                    {
-                        // clicked on shop box
-                        building = 1;
-                        counting = false;
-                    }
-                    else if (j == 2)
-                    {
-                        // clicked on hut box
-                        building = 2;
-                        counting = false;
-                    }
-                }
+                handleBuild(curState);
+                buildingQueued = false;
+                return;
             }
+            building = uiHandler.HandleBuildMenuClick(mousePoint, lr);
+            if (building > 0 && checkBuildReqs())
+            {
+                buildingQueued = true;
+            }
+            return;
         }
 
-        if (counting)
-        {
-            // mouse click no overlap
-            handleBuild(curState);
-        }
+
     }
 
     protected void tickSec()
@@ -398,52 +393,21 @@ public class VillageIncrementalGame : Game
     }
 
 
-    protected void openBuildMenu()
-    {
-        buildMenuOpen = true;
-    }
 
-    protected void drawBuildMenu()
-    {
-        for (int i = 0; i < buildMenuSprites.Count; i++)
-        {
-            _spriteBatch.Draw(buildMenuSprites[i], new Vector2(buildMenuSpriteCoords[i].Item1, buildMenuSpriteCoords[i].Item2), Color.White);
-        }
 
-        _spriteBatch.Draw(shop, new Vector2(240, 790), Color.White);
-
-        // prices
-        _spriteBatch.DrawString(font, "10", new Vector2(275, 1000), Color.Black); // wood
-        _spriteBatch.DrawString(font, "10", new Vector2(375, 1000), Color.Black); // iron
-        _spriteBatch.DrawString(font, "0", new Vector2(475, 1000), Color.Black); // coins
-
-        _spriteBatch.Draw(hut, new Vector2(570, 790), Color.White);
-        _spriteBatch.DrawString(font, "15", new Vector2(605, 1000), Color.Black);
-        _spriteBatch.DrawString(font, "5", new Vector2(705, 1000), Color.Black);
-        _spriteBatch.DrawString(font, "25", new Vector2(805, 1000), Color.Black);
-    }
-
-    protected void closeBuildMenu()
-    {
-        mySprites.Remove(buildmenubox);
-        mySprites.Remove(buildmenubox);
-        spriteCoords.Remove((200, 770));
-        spriteCoords.Remove((530, 770));
-        buildMenuOpen = false;
-    }
 
 
 
     protected void handleBuild(MouseState newState)
     {
+        Console.WriteLine("Building: " + building);
         if (building == 1)
         {
             // shop
             if (checkBuildReqs())
             {
-                if (currentTrack == 0) {
-                    switchMusic(1);
-                }
+                buildSound.Play();
+
 
 
                 woodStock -= 10;
@@ -452,9 +416,13 @@ public class VillageIncrementalGame : Game
                 int yCoord = newState.Y - (shop.Height / 2);
                 Building thisShop = new Shop((xCoord, yCoord), shop.Width, shop.Height, shop, shopchoose, woodshop, ironshop);
                 myBuildings.Add(thisShop);
-                myShops.Add(thisShop);
                 building = 0;
-                closeBuildMenu();
+                if (currentTrack == 0)
+                {
+                    switchMusic(1);
+                }
+
+                uiHandler.CloseBuildMenu();
             }
         }
         else if (building == 2)
@@ -462,9 +430,9 @@ public class VillageIncrementalGame : Game
             // hut
             if (checkBuildReqs())
             {
-                if (currentTrack == 1) {
-                    switchMusic(2);
-                }
+                buildSound.Play();
+
+                
 
                 woodStock -= 15;
                 ironStock -= 5;
@@ -474,7 +442,11 @@ public class VillageIncrementalGame : Game
                 Building thisBuilding = new Hut((xCoord, yCoord), hut.Width, hut.Height, hut, hutchoose, woodHut, ironHut);
                 myBuildings.Add(thisBuilding);
                 building = 0;
-                closeBuildMenu();
+                if (currentTrack == 1)
+                {
+                    switchMusic(2);
+                }
+                uiHandler.CloseBuildMenu();
             }
         }
     }
@@ -495,10 +467,25 @@ public class VillageIncrementalGame : Game
                 return true;
             }
         }
+        buildingQueued = false;
+        building = 0;
+        errorSound.Play();
         return false;
     }
 
 
+    protected void toggleBuildMenu(){
+        building = 0;
+        buildingQueued = false;
+        if (uiHandler.buildMenuOpen)
+        {
+            uiHandler.CloseBuildMenu();
+        }
+        else
+        {
+            uiHandler.OpenBuildMenu();
+        }
+    }
 
 
     protected override void Draw(GameTime gameTime)
@@ -508,33 +495,19 @@ public class VillageIncrementalGame : Game
         _spriteBatch.Begin();
         _spriteBatch.Draw(background, new Rectangle(0, 0, 1920, 1080), Color.White);
 
-        int i = 0;
-        foreach (Texture2D texture in mySprites)
+
+
+        for (int i = 0; i < clickables.Count; i++)
         {
-            _spriteBatch.Draw(texture, new Vector2(spriteCoords[i].Item1, spriteCoords[i].Item2), Color.White);
-            i++;
+            _spriteBatch.Draw(clickables[i].sprite, new Vector2(clickables[i].coords.Item1, clickables[i].coords.Item2), Color.White);
         }
 
-        _spriteBatch.Draw(scoreboard, new Vector2(50, 50), Color.White);
-        _spriteBatch.Draw(woodicon, new Vector2(110, 75), Color.White);
-        _spriteBatch.Draw(ironicon, new Vector2(380, 100), Color.White);
-        _spriteBatch.Draw(coinicon, new Vector2(650, 80), Color.White);
-
-
-        _spriteBatch.DrawString(font, woodStock.ToString(), new Vector2(180, 100), Color.Black);
-        _spriteBatch.DrawString(font, ironStock.ToString(), new Vector2(465, 100), Color.Black);
-        _spriteBatch.DrawString(font, coins.ToString(), new Vector2(725, 100), Color.Black);
 
         foreach (Building build in myBuildings)
         {
             _spriteBatch.Draw(build.getTexture(), new Vector2(build.getCoords().Item1, build.getCoords().Item2), Color.White);
-            i++;
         }
 
-        if (buildMenuOpen)
-        {
-            drawBuildMenu();
-        }
 
         MouseState newState = Mouse.GetState();
 
@@ -550,7 +523,7 @@ public class VillageIncrementalGame : Game
         }
 
 
-        //uiHandler.DrawUI(woodStock, ironStock, coins);
+        uiHandler.DrawUI(woodStock, ironStock, coins);
 
         _spriteBatch.End();
         base.Draw(gameTime);

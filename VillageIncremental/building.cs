@@ -3,13 +3,19 @@ using System.Reflection.Metadata.Ecma335;
 using System.Runtime.CompilerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 
 
 
-namespace Buildings{
+
+
+namespace Buildings
+{
+
+
   class Building
   {
-    public Texture2D texture; 
+    public Texture2D texture;
     public (int, int) coords;
     public int width;
     public int height;
@@ -24,13 +30,13 @@ namespace Buildings{
       this.texture = texture;
     }
 
-    public virtual (int, int) lclick(Point mouseCoords){return (0,0);}
+    public virtual (int, int) lclick(Point mouseCoords) { return (0, 0); }
 
-    public virtual void rclick(Point mouseCoords){}
+    public virtual void rclick(Point mouseCoords) { }
 
-    public virtual Texture2D getTexture(){return this.texture;}
+    public virtual Texture2D getTexture() { return this.texture; }
 
-    public (int, int) getCoords(){return this.coords;}
+    public (int, int) getCoords() { return this.coords; }
 
 
   }
@@ -76,7 +82,7 @@ namespace Buildings{
       {
         return this.ironHutTexture;
       }
-      else { return this.texture;}
+      else { return this.texture; }
     }
 
     public override (int, int) lclick(Point mouseCoords)

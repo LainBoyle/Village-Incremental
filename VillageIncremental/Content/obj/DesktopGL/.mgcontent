@@ -4,15 +4,13 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
+    <File>c:/Users/elain/.vscode/VillageIncremental/VillageIncremental/VillageIncremental/Content/buildmenubox.png</File>
     <File>c:/Users/elain/.vscode/Hearts/VillageIncremental/VillageIncremental/VillageIncremental/Content/background.png</File>
     <File>c:/Users/elain/.vscode/Hearts/VillageIncremental/VillageIncremental/VillageIncremental/Content/hut.png</File>
     <File>c:/Users/elain/.vscode/Hearts/VillageIncremental/VillageIncremental/VillageIncremental/Content/mine.png</File>
     <File>c:/Users/elain/.vscode/Hearts/VillageIncremental/VillageIncremental/VillageIncremental/Content/tree.png</File>
   </SourceFiles>
   <DestFiles>
-    <File xsi:nil="true" />
-    <File xsi:nil="true" />
-    <File xsi:nil="true" />
     <File xsi:nil="true" />
   </DestFiles>
 </SourceFileCollection>

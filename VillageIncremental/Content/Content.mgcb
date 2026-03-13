@@ -13,6 +13,18 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin ../../../Assets/buildmenubox.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../../../Assets/buildmenubox.png;buildmenubox.png
+
 #begin background.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -25,17 +37,11 @@
 /processorParam:TextureFormat=Color
 /build:background.png
 
-#begin buildmenubox.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:buildmenubox.png
+#begin buildsound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:buildsound.wav
 
 #begin chopsound.mp3
 /importer:Mp3Importer
@@ -66,6 +72,12 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:coinicon.png
+
+#begin errorsound.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:errorsound.mp3
 
 #begin gear.png
 /importer:TextureImporter
@@ -151,6 +163,18 @@
 /processorParam:TextureFormat=Color
 /build:ironshop.png
 
+#begin ironsound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:ironsound.wav
+
+#begin kaching.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:kaching.wav
+
 #begin mine.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -187,18 +211,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:scoreboard.png
-
-#begin shop.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:shop.png
 
 #begin shop.png
 /importer:TextureImporter
@@ -289,4 +301,10 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:woodshop.png
+
+#begin woodsound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:woodsound.wav
 
